@@ -82,7 +82,7 @@ jQuery(document).ready(function($) {
     <br><br>
     <label class="image">Select Image</label>
     <input type="file" name="file_info[]" onchange="preview_member(event, 0)" value="{{$row->img_src ?? ''}}">
-    <a href="javascript:;" data-id="{{$j}}" id="deleteRow" class="btn btn-danger btn-xs btn-remove-image" title="Remove Image" style="margin-left: 594px;margin-top: -58px;">Remove</a>
+    <a href="javascript:;" data-id="{{$j}}" data-file="{{$row->id}}" id="deleteRow" class="btn btn-danger btn-xs btn-remove-image" title="Remove Image" style="margin-left: 594px;margin-top: -58px;">Remove</a>
 
 </div>
 @php $j++; @endphp
@@ -93,7 +93,13 @@ jQuery(document).ready(function($) {
    //Delete Category 
    $(document).on('click','#deleteRow',function(e){
       e.preventDefault();
+
+      //get base_url
+      var base_url = window.location.origin
       var id = $(this).data('id');
+      var file_id = $(this).data('file');
+      var delete_url = base_url + '/delete-file/'+file_id;
+
       Swal.fire({
           title: 'Are you sure?',
           text: "You won't be able to revert this!",
@@ -104,12 +110,19 @@ jQuery(document).ready(function($) {
           confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.isConfirmed) {
-          $("#mp_"+id).remove();
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
+            axios.get(delete_url)
+            .then(function(response){
+              //console.log(response.data);
+             if(response.data.success == true){
+                $("#mp_"+id).remove()
+                Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+             }
+
+            });
         }
 })
      
@@ -117,6 +130,7 @@ jQuery(document).ready(function($) {
     });
 
 </script> 
+
 
 
 

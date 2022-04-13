@@ -1,0 +1,19 @@
+Route::get('/delete-file/{id}',[
+            'as' => 'delete-file',
+            'uses' => 'RequisitionController@deleteFile'
+        ]);
+
+public function deleteFile($id)
+    {
+        $findFile = File_info::where('id',$id)->first();
+        if(!empty($findFile)){
+            @unlink(public_path('upload/requisition_files/'.$imgs->img_src));
+            $findFile->delete();
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'File Deleted successfully !!',
+            'code' =>  200,
+            'result' => $findFile,
+        ]);
+    }
