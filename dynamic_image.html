@@ -1,0 +1,64 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<div class="card">
+  <div class="card-header text-center">
+    <b>Team Members</b>
+  </div>
+  <div class="card-body">
+
+  <div class="row">
+    <div class="col-4">
+        <img src="" class="img-thumbnail" id="output_member0">
+    <br><br>
+        <label class="btn btn-success btn-block btn-file">Select Image<input type="file" name="member_image[]" onchange="preview_member(event, 0)" style="display: show;"></label>
+    </div>
+  </div>
+
+    <div id="team-member-fields">
+    </div>
+    <button type="button" class="btn btn-success btn-block" id="add-member-fields">Add Member</button>
+
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+var i = 0;
+
+function preview_member(event, inp) {
+  var reader = new FileReader();
+  console.log(inp);
+  reader.onload = function() {
+    var output = document.getElementById("output_member" + inp);
+    output.src = reader.result;
+  };
+
+  reader.readAsDataURL(event.target.files[0]);
+}
+
+jQuery(document).ready(function($) {
+  //fadeout selected item and remove
+  $(document).on("click", "#remove-member-fields", function(event) {
+    event.preventDefault();
+    $(this)
+      .parent()
+      .fadeOut(300, function() {
+        $(this).empty();
+        return false;
+      });
+  });
+
+  //add input
+  $("#add-member-fields").click(function() {
+    i++;
+
+    var rows = `<div class="member-fields"><div class="row"><div class="col-4"><img src="<?php echo esc_url( site_url('/wp-content/img/blank-image.png') ); ?>" class="img-thumbnail" id="output_member${i}"><br><br><label class="btn btn-success btn-block btn-file">Select Image<input type="file" name="member_image[]" onchange="preview_member(event, ${i})" style="display: show;"></label></div></div><button type="button" class="btn btn-danger btn-block" id="remove-member-fields">Remove Member</button></div>`;
+
+    $(rows)
+      .fadeIn("slow")
+      .appendTo("#team-member-fields");
+    return false;
+  });
+});
+
+</script>
